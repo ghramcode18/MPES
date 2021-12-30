@@ -17,7 +17,9 @@ class User extends Authenticatable
         'password',
         'real_email',
         'phone',
-        'active'
+        'active',
+        // 'user_id',
+        // 'product_id'
     ];
 
     public function comments()

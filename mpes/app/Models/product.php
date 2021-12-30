@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class product extends Model
 {
+   // public $with=['user_id']; //TODO 
     protected $fillable = [
         'product_name',
         'expiry_date',
@@ -14,7 +15,8 @@ class product extends Model
         'type',
         'num_likes',
         'price',
-        'amount_products'
+        'amount_products',
+        'user_id',
     ];
     public function comments()
     {
