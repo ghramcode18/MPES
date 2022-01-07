@@ -9,7 +9,7 @@ class discount extends Model
 {
     public $table = 'discounts';
     public $primaryKey = 'id';
-    protected $fillable =   [
+    protected $fillable =[
         'name',
         'discount_date',
         'discount'

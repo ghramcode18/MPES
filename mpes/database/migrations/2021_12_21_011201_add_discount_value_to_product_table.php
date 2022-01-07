@@ -4,20 +4,30 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddShowToProductTable extends Migration
+class AddDiscountValueToProductTable extends Migration
 {
-   
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->integer('view')->after('num_likes');
+            $table->integer('discount_value')->after('expiry_date');
+
         });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            
+            //
         });
     }
 }

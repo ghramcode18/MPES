@@ -7,29 +7,46 @@ use Illuminate\Database\Eloquent\Model;
 
 class product extends Model
 {
-   // public $with=['user_id']; //TODO 
+    public $with = ['category','discounts'];
+
+
+    protected $table = 'products';
     protected $fillable = [
+        'id',
         'product_name',
         'expiry_date',
         'image',
         'type',
         'num_likes',
         'price',
-        'amount_products',
         'user_id',
+        'category_name',
+        "category_id",
+        'amount_products'
+
     ];
+    public $timestamps;
     public function comments()
     {
         return $this->hasMany('App\Models\comment');
     }
-    public function users()
+
+    public function user()
     {
-        return $this->belongsTo('App\Models\User');
-    }
-    public function discounts()
-    {
-        return $this->hasMany('App\Models\discount');
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 
+    public function discounts()
+    {
+        return $this->hasMany('App\Models\discount')->orderBy('discount_date');
+    }
+
+
+
+    public function Category()
+    {
+        return $this->belongsTo('App\Models\category', 'category_id');
+
+    }
     use HasFactory;
 }

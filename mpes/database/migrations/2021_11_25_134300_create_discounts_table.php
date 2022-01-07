@@ -6,9 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDiscountsTable extends Migration
 {
-    
+
     public function up()
-    {
+    {       Schema::dropIfExists('discounts');
+
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -23,5 +24,6 @@ class CreateDiscountsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('prices');
+
     }
 }

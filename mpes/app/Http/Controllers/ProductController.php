@@ -3,117 +3,144 @@
 namespace App\Http\Controllers;
 
 use App\Models\product;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Models\category;
+use Carbon\Carbon;
+
+
 
 class ProductController extends Controller
 {
 
-    
-    public function Update($id, Request $request)
+// public function store(Request $request)
+// {//Done
+//     $inputs = $request->all();
+//     return $product = Product::Create($inputs);
+// }
+
+
+    public function show( $id)
     {
+        # Done...
 
-        $product = product::find($id)->get();
-       //$product = Product::find->get();
-        if($request->product_name != null)
-        {
-            DB::table('products')
-            ->where('id', $id)
-            ->update(['product_name'=>$request->product_name]);
-        }
-        if($request->price != null)
-        {
-            DB::table('products')
-            ->where('id', $id)
-            ->update(['price'=>$request->price]);
-        }
-        if($request->image != null)
-        {
-            DB::table('products')
-            ->where('id', $id)
-            ->update(['image'=>$request->image]);
-        }
-        if($request->type != null)
-        {
-            DB::table('products')
-            ->where('id', $id)
-            ->update(['type'=>$request->type]);
-        }
-        if($request->amount_products != null)
-        {
-            DB::table('products')
-            ->where('id', $id)
-            ->update(['amount_products'=>$request->amount_products]);
-        }
-
-        return ['Update done...'];
-        }
-
-
-    public function Add(Request $request)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'product_name'=>['string'],
-            'expiry_date'=>['required'],
-            'image'=>['required','string'],
-            'type'=>['required','string'],
-            //'num_likes'=>['required','numeric'],
-            'price'=>['required','numeric'],
-            'amount_products'=>['required','numeric'],
-            'user_id'=>['required','numeric'],
-        ]);
-        if($validator->fails()){
-            return $validator->errors()->all();
-        }
-        $product = Product::query()->create([
-            'product_name' => $request->product_name,
-            'expiry_date' => $request->expiry_date,
-            'image' => $request->image,
-            'type' => $request->type,
-            //'num_likes' => $request->num_likes,
-            'num_likes' => 0 ,
-            'price' => $request->price,
-            'amount_products' => $request->amount_products,
-            'user_id' => $request->user_id
-        ]);
-        if($product->save())
-        return ['status'=>'Product created successfully.'];
-
-    }
-
-    public function ShowDetails($id)
-    {
            $product = Product::find($id);
-           $product->view +=1 ;
-           $product->update();  
-           return  $product;//->load(['user']);
+           $discounts = $product->discounts()->get();
+           $maxDiscount = null;
+            foreach ($discounts as $discount)
+            {
+                if (Carbon::parse($discount['discount_date']) <= now())
+                {
+                $maxDiscount = $discount;
+                }
+            }
+            if (!is_null($maxDiscount))
+            {
+                $discount_value =
+                ($product->price*$maxDiscount['discount'])/100;
+                // ex: 1000*(22/100)=220->1000-220=780
+                $product['current_price'] = $product->price - $discount_value;
+            }
+                 //dd($product['current_price'] );
+           return  $product->load(['user']);
     }
 
-    
-    public function Pagination(){
-
-        $product = product::all();
-        $product = product::paginate(3);
-        return $product ;
-    }
-
-    public function UserProduct($user_id){
-
-       return Product::where('user_id','like','%'.$user_id.'%')->get();
-
-    }
-    public function ShowDetailsWithEmail($id)
+    public function searchByName(string $product_name)
     {
-           $product = Product::find($id);
-           $product->view +=1 ;
-           $product->update();  
-           return  $product;//->load(['user']);
+            # Done...
+
+        // dd(product::where('product_name', $product_name)->get());
+        return  product::where('product_name', $product_name)->get();
+
     }
 
-    public function addProduct(Request $request)
+    public function searchByType( $type)
+    {
+            # Done...
+
+        // dd(product::where('product_name', $product_name)->get());
+        return  product::where('type', $type)->get();
+
+    }
+
+    public function searchByExpiry_date($expiry_date)
+    {   #Done
+        $current = Carbon::parse($expiry_date);
+        return  product::where('expiry_date', $current)->get();
+
+       /* to return product after compare the current date with the date in the request
+        and return all the product have the date and all grater than
+        return product:: whereDate('expiry_date', '>', Carbon::now())->get();
+       */
+
+    }
+
+    public function sortingByCategory( $category_id)
+    {
+        # Done...
+
+        return Category::find( $category_id)->product()->get();
+    }
+
+    public function sortingByType( $type)
+    {
+        # Done...
+
+        return product::orderBy('type')->product()->get();
+    }
+
+
+
+
+   public function addLike( $id, Request $request)
+   {
+        #Done
+        $product=Product::find($id)->get();
+        if($request->num_likes!=null)
+        {        DB::table('products')
+                    ->where('id', $id)
+                    ->update(['num_likes'=>$request->num_likes]);
+        }
+        return['Update like done'];
+    }
+
+
+
+
+//   // public function indexPaging()
+//     // {
+//     //     $products = Product::paginate(5);
+
+//     //     return view('products.index-paging')->with('products', $products);
+//     // }
+// // Route::get('products/index-paging', 'ProductsController@indexPaging');
+
+
+
+
+
+
+    public function destroy($id)
+    {
+        # Done...
+
+            $product =Product::find($id); $product->delete(); return $product;
+    }
+
+
+
+    public function getProducts()
+     {
+         # Done...
+         $product=product::query()->with(['user'])->get();
+         return $product;
+
+    }
+
+
+
+    public function add(Request $request)
     {
         # Done.....
 
@@ -162,4 +189,4 @@ class ProductController extends Controller
         return ['status'=>'Product created successfully.'];
 
     }
-}
+ }
