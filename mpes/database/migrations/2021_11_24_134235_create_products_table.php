@@ -18,10 +18,14 @@ class CreateProductsTable extends Migration
             $table->text('image');
             $table->string('type');
             $table->integer('num_likes');
+            $table->integer('view');
             $table->integer('price');
             $table->integer('amount_products');
+            $table->integer('active');
+            $table->integer('discount_value');
             $table->foreignId(column:'user_id')->constrained(table:'users')->cascadeOnDelete();
             $table->foreignId(column:'category_id')->constrained(table:'categorys')->cascadeOnDelete();
+
 
             $table->timestamps();
         });

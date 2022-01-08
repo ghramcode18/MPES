@@ -15,6 +15,7 @@ class CreateDiscountsTable extends Migration
             $table->string('name');
             $table->date('discount_date');
             $table->integer('discount');
+            $table->integer('discount_value');
             $table->foreignId(column:'product_id')->constrained(table:'products')->cascadeOnDelete();
             $table->timestamps();
 
