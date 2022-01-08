@@ -15,37 +15,29 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array<int, string>
      */
-
     protected $fillable = [
-        'user_name','real_email','password','email_app','active','phone'
-
+        'name',
+        'email',
+        'password',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
-    public function comments()
-    {
-        return $this->hasMany('App\Models\comment');
-    }
-    public function products()
-    {
-        return $this->hasMany('App\Models\product')->orderBy('type');
-    }
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-
-    //  * The attributes that should be cast.
-    //  *
-    //  * @var array
-    //  */
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
